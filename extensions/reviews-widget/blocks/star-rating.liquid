@@ -1,0 +1,66 @@
+{% if product and shop %}
+  <div id="star-rating-{{ section.id }}"
+       class="star-rating"
+       data-product-id="{{ product.id }}"
+       data-shop="{{ shop.domain }}"
+       data-fallback-text="{{ section.settings.review_text }}"
+       data-fallback-rating="{{ section.settings.rating_value }}"
+       data-star-color="{{ section.settings.star_color }}"
+       style="font-size: {{ section.settings.star_size }}px;"
+       onclick="window.location.hash = 'loox-clone-reviews';"
+       role="figure"
+       aria-label="Product rating">
+    <div class="stars" aria-hidden="true"></div>
+    <span class="label">{{ section.settings.review_text }}</span>
+  </div>
+
+  <!-- Loox SVG defs (only once per page) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" id="loox-rating-icon-svg-store">
+    <defs>
+      <symbol id="looxicons-rating-icon" viewBox="0 0 24 24">
+        <path d="M24 9.425c0 .212-.125.443-.375.693l-5.236 5.105 1.24 7.212c.01.067.015.164.015.289a.85.85 0 0 1-.151.511.51.51 0 0 1-.44.21c-.183 0-.375-.058-.577-.174L12 19.869l-6.476 3.404c-.212.115-.404.173-.577.173-.202 0-.353-.07-.454-.21a.85.85 0 0 1-.152-.511c0-.058.01-.154.03-.289l1.24-7.211-5.25-5.106C.12 9.858 0 9.628 0 9.425c0-.355.27-.577.808-.663l7.24-1.053 3.245-6.562c.183-.395.418-.592.707-.592s.524.197.707.592l3.245 6.562 7.24 1.053c.539.086.808.308.808.663Z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <style>
+  .star-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: {{ section.settings.star_size }}px;
+  }
+  .star-rating .stars {
+    display: inline-flex;
+    gap: 2px;
+    font-size: inherit;
+  }
+  .star-rating .loox-icon {
+    width: {{ section.settings.star_size }}px;
+    height: {{ section.settings.star_size }}px;
+  }
+  .star-rating .label {
+    color: {{ section.settings.text_color }};
+    white-space: nowrap;
+    margin-left: 4px;
+    font-size: {{ section.settings.label_size }}px;
+  }
+</style>
+
+
+  <script defer src="{{ 'star-rating.js' | asset_url }}"></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Star Rating",
+  "target": "section",
+  "settings": [
+    { "type": "color", "id": "star_color",   "label": "Star Color",         "default": "#EBBF20" },
+    { "type": "color", "id": "text_color",   "label": "Text Color",         "default": "#333333" },
+    { "type": "range", "id": "star_size",    "label": "Star Size (px)",     "min": 12, "max": 32, "step": 1, "default": 20 },
+    { "type": "text",  "id": "review_text",  "label": "Fallback Text",      "default": "(0)" },
+    { "type": "range", "id": "rating_value", "label": "Fallback Rating",    "min": 1,  "max": 5,  "step": 0.1, "default": 4.8 }
+  ]
+}
+{% endschema %}

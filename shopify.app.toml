@@ -1,0 +1,33 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "36ac4d11de3a2f755f4eee97922c0450"
+application_url = "https://watts-bomb-inner-gt.trycloudflare.com"
+embedded = true
+name = "reviews-app"
+handle = "reviews-app"
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2025-04"
+
+[app_proxy]
+prefix = "apps"
+subpath = "steenbergecom-reviews"
+url = "https://watts-bomb-inner-gt.trycloudflare.com/getmyreviews"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products,read_products"
+
+[auth]
+redirect_urls = [
+  "https://watts-bomb-inner-gt.trycloudflare.com/auth/callback",
+  "https://watts-bomb-inner-gt.trycloudflare.com/auth/shopify/callback",
+  "https://watts-bomb-inner-gt.trycloudflare.com/api/auth/callback"
+]
+
+[pos]
+embedded = false

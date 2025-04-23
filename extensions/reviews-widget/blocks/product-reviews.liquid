@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loox Clone Reviews</title>
+  <link rel="stylesheet" href="reviews-widget.css">
+  <style>
+
+
+
+    /* --- Global styles for review items --- */
+    .grid-item-wrap {
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 12px;
+      transition: box-shadow 0.3s ease;
+    }
+    .grid-item-wrap:hover {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+    .item-img img {
+      max-width: 100%;
+    }
+    .block.title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .block.stars {
+      margin: 6px 0;
+    }
+    .main-text {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.4;
+    }
+    /* --- Responsive Grid --- */
+    .loox-reviews-list {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 768px) {
+      .loox-reviews-list {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    /* --- Popup overlay styles --- */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #quickview {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      width: 100%;
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<div class="product-reviews">
+  <div class="reviews-summary-bar">
+    <div class="stars-container">
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="star">★</span>
+    </div>
+
+    <button class="reviews-toggle" onclick="toggleReviews()">
+      <span class="reviews-count">0 Reviews</span>
+      <div class="header-chevron">
+        <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg" class="chevron-open">
+          <path d="M7.11098 5.15691L2.16098 0.206909L0.746979 1.62091L7.11098 7.98491L13.475 1.62091L12.061 0.206911L7.11098 5.15691Z" fill="black"></path>
+        </svg>
+        <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg" class="chevron-closed chevron-hide">
+          <path d="M6.88902 3.03498L11.839 7.98499L13.253 6.57099L6.88902 0.206985L0.525021 6.57098L1.93902 7.98498L6.88902 3.03498Z" fill="black"></path>
+        </svg>
+      </div>
+    </button>
+
+    <button id="write" class="btn lx-btn lx-primary header-btn">Write a review</button>
+
+    <div class="filter-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 6H21M6 12H18M10 18H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="reviews-details" id="reviewsDetails">
+    <div class="reviews-popup">
+      <div class="reviews-stats">
+        <div class="average-rating">
+          <span class="star large">★</span>
+          <span class="rating-value">4.9</span>
+        </div>
+
+<div class="rating-bars">
+  <div class="rating-bar-row" data-stars="5">
+    <div class="stars-container">★★★★★</div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 0;"></div></div>
+    <span class="count">(0)</span>
+  </div>
+  <div class="rating-bar-row" data-stars="4">
+    <div class="stars-container">★★★★☆</div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 0;"></div></div>
+    <span class="count">(0)</span>
+  </div>
+  <div class="rating-bar-row" data-stars="3">
+    <div class="stars-container">★★★☆☆</div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 0;"></div></div>
+    <span class="count">(0)</span>
+  </div>
+  <div class="rating-bar-row" data-stars="2">
+    <div class="stars-container">★★☆☆☆</div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 0;"></div></div>
+    <span class="count">(0)</span>
+  </div>
+  <div class="rating-bar-row" data-stars="1">
+    <div class="stars-container">★☆☆☆☆</div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 0;"></div></div>
+    <span class="count">(0)</span>
+  </div>
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="{{ 'reviews-header.css' | asset_url }}">
+
+
+<script>
+  function toggleReviews() {
+    const reviewsDetails = document.getElementById('reviewsDetails');
+    const chevronOpen = document.querySelector('.chevron-open');
+    const chevronClosed = document.querySelector('.chevron-closed');
+    const isOpen = reviewsDetails.style.display === 'block';
+
+    reviewsDetails.style.display = isOpen ? 'none' : 'block';
+
+    if (chevronOpen && chevronClosed) {
+      chevronOpen.classList.toggle('chevron-hide', !isOpen);
+      chevronClosed.classList.toggle('chevron-hide', isOpen);
+    }
+  }
+</script>
+
+<body class="grid-active">
+  <!-- SVG Icons (include these once per site) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none" id="loox-rating-icon-svg-store">
+    <defs></defs>
+    <symbol id="looxicons-rating-icon-fill" viewBox="0 0 24 24" fill="currentcolor">
+      <path d="M24 9.425c0 .212-.125.443-.375.693l-5.236 5.105 1.24 7.212c.01.067.015.164.015.289a.85.85 0 0 1-.151.511.51.51 0 0 1-.44.21c-.183 0-.375-.058-.577-.174L12 19.869l-6.476 3.404c-.212.115-.404.173-.577.173-.202 0-.353-.07-.454-.21a.85.85 0 0 1-.152-.511c0-.058.01-.154.03-.289l1.24-7.211-5.25-5.106C.12 9.858 0 9.628 0 9.425c0-.355.27-.577.808-.663l7.24-1.053 3.245-6.562c.183-.395.418-.592.707-.592s.524.197.707.592l3.245 6.562 7.24 1.053c.539.086.808.308.808.663Z"></path>
+    </symbol>
+    <symbol id="looxicons-rating-icon-line" viewBox="0 0 24 24" fill="currentcolor">
+      <path d="m16.399 14.574 4.413-4.283-6.086-.894L12 3.887l-2.726 5.51-6.086.894L7.6 14.574l-1.053 6.072L12 17.776l5.438 2.87-1.039-6.072ZM24 9.425c0 .212-.125.443-.375.693l-5.236 5.105 1.24 7.212c.01.067.015.164.015.289 0 .48-.197.72-.591.72-.183 0-.375-.057-.577-.172L12 19.867l-6.476 3.404c-.212.115-.404.173-.577.173-.202 0-.353-.07-.454-.21a.85.85 0 0 1-.152-.511c0-.058.01-.154.03-.289l1.24-7.211-5.25-5.106C.12 9.858 0 9.628 0 9.425c0-.355.27-.577.808-.663l7.24-1.053 3.245-6.562c.183-.395.418-.592.707-.592s.524.197.707.592l3.245 6.562 7.24 1.053c.539.086.808.308.808.663Z"></path>
+    </symbol>
+    <defs>
+      <style>
+        .lx-icon-fill {
+          --lx-fill-width: calc(100% - var(--lx-rating-percent, 0%));
+          clip-path: inset(0 var(--lx-fill-width, 0) 0 0);
+        }
+        .lx-icon-line {
+          clip-path: inset(0 0 0 var(--lx-rating-percent, 0%));
+        }
+        [data-lx-fill='empty'] {
+          --lx-rating-percent: 0%;
+        }
+        [data-lx-fill='half'] {
+          --lx-rating-percent: 50%;
+        }
+        [data-lx-fill='full'] {
+          --lx-rating-percent: 100%;
+        }
+      </style>
+      <g id="looxicons-rating-icon">
+        <use href="#looxicons-rating-icon-line" class="lx-icon-line"></use>
+        <use href="#looxicons-rating-icon-fill" class="lx-icon-fill"></use>
+      </g>
+    </defs>
+  </svg>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none" id="loox-ic-verified-icon-svg-store">
+    <defs>
+      <clipPath id="loox-ic-verified-icon_ic-verified-icon__a">
+        <path d="M0 0h24v24H0z"></path>
+      </clipPath>
+    </defs>
+    <symbol id="loox-ic-verified-icon" viewBox="0 0 24 24" fill="currentcolor">
+      <g clip-path="url(#loox-ic-verified-icon_ic-verified-icon__a)">
+        <path d="M23.625 12c0 6.42-5.205 11.625-11.625 11.625S.375 18.42.375 12 5.58.375 12 .375 23.625 5.58 23.625 12Zm-12.97 6.155L19.28 9.53a.75.75 0 0 0 0-1.06l-1.06-1.06a.75.75 0 0 0-1.061 0l-7.034 7.033-3.284-3.284a.75.75 0 0 0-1.06 0l-1.061 1.06a.75.75 0 0 0 0 1.061l4.875 4.875a.75.75 0 0 0 1.06 0Z"></path>
+      </g>
+    </symbol>
+  </svg>
+  
+  <!-- Reviews container (populate product id via templating) -->
+  <div id="loox-clone-reviews" data-product-id="{{ product.id }}" style="padding: 20px;">
+    <p>Loading reviews...</p>
+  </div>
+  
+</div>
+
+  <script>
+    // When DOM is ready, fetch and render reviews
+    document.addEventListener("DOMContentLoaded", async () => {
+      console.log("🟢 DOMContentLoaded triggered");
+      const container = document.getElementById("loox-clone-reviews");
+      if (!container) return;
+      
+      // Get product id and shop (adjust this to your templating/runtime)
+      const productId = container.dataset.productId;
+      const shop = window.Shopify ? window.Shopify.shop : null;
+      if (!productId || !shop) return;
+      
+      const url = `/apps/steenbergecom-reviews?productId=${productId}&shop=${shop}`;
+      console.log("📡 Fetching:", url);
+      
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const reviews = data.reviews || [];
+        if (reviews.length === 0) {
+          container.innerHTML = `<p>No reviews yet.</p>`;
+          return;
+        }
+        
+        // Render reviews into a responsive grid
+        const visibleCount = 10;
+        const initialReviews = reviews.slice(0, visibleCount);
+        const hiddenReviews = reviews.slice(visibleCount);
+
+        container.innerHTML = `
+          <div class="loox-reviews-list" id="reviews-list">
+            ${initialReviews.map(renderReview).join('')}
+          </div>
+          ${hiddenReviews.length ? `<div style="text-align:center; margin-top: 20px;">
+            <button id="show-more-reviews" style="padding: 10px 20px; background:black; color:white; border:none; border-radius:6px; cursor:pointer;">
+              Show more reviews
+            </button>
+          </div>` : ''}
+        `;
+
+        // Add hidden ones after click
+        document.getElementById('show-more-reviews')?.addEventListener('click', () => {
+          const list = document.getElementById('reviews-list');
+          hiddenReviews.forEach(r => {
+            list.insertAdjacentHTML('beforeend', renderReview(r));
+          });
+          document.getElementById('show-more-reviews')?.remove();
+        });
+
+        
+        // Attach click events to open popup on review click.
+        // (For production, consider event delegation.)
+        document.querySelectorAll(".loox-reviews-list .grid-item.clearfix")
+          .forEach(card => {
+            card.addEventListener("click", function() {
+              // Retrieve review data (stored as an encoded JSON string on the parent element)
+              const reviewData = this.parentElement.getAttribute("data-review");
+              if (reviewData) {
+                const review = JSON.parse(decodeURIComponent(reviewData));
+                openReviewPopup(review);
+              }
+            });
+          });
+      } catch (err) {
+        console.error("❌ Failed to load reviews:", err);
+        container.innerHTML = `<p>Failed to load reviews.</p>`;
+      }
+    });
+
+
+    
+    // Render a review card with the verified badge markup (exactly as provided)
+    function renderReview(r) {
+      const reviewDataAttr = encodeURIComponent(JSON.stringify(r));
+      return `
+        <div class="grid-item-wrap has-img" data-id="${r.id}" data-review="${reviewDataAttr}">
+  <div class="grid-item clearfix">
+    <div class="item-img">
+      ${r.image_url ? `<img src="${r.image_url}" alt="${r.reviewer_name} review image">` : ""}
+    </div>
+    <div class="main">
+      <div class="block title">
+        ${r.reviewer_name || "Anonymous"}
+        ${r.verified ? `
+          <span class="verified-badge-and-text">
+            <svg viewBox="0 0 24 24" role="img" class="loox-verified-badge">
+              <use href="#loox-ic-verified-icon"></use>
+            </svg>
+            <span>Verified</span>
+          </span>
+        ` : ""}
+      </div>
+      <div class="block stars">
+        ${renderStars(r.rating)}
+      </div>
+      <div class="main-text">${r.review_text}</div>
+    </div>
+  </div>
+</div>
+
+      `;
+    }
+    
+    // Generate SVG stars for the given rating
+    function renderStars(count) {
+      const filled = `<svg viewBox="0 0 20 20" width="18" height="18" fill="#FFD700">
+                        <path d="M10 15l-5.878 3.09 1.123-6.545L.49 6.91l6.561-.954L10 0l2.949 5.956 6.561.954-4.755 4.635 1.123 6.545z"/>
+                      </svg>`;
+      return new Array(count).fill(filled).join('');
+    }
+    
+    // Render the popup markup exactly as provided.
+    function renderPopup(r) {
+      return `
+        <div id="quickview" tabindex="0" role="dialog" style="outline:0" data-testid="qv-review-dialog">
+          <div class="grid-item-wrap has-img">
+            <div data-id="${r.id}" style="outline:0" class="grid-item clearfix">
+              <button id="close-btn" aria-label="Close popup" data-testid="qv-review-close" class="close-btn" onclick="closeReviewPopup()">
+                <div class="close-button-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 10.5862L16.95 5.63623L18.364 7.05023L13.414 12.0002L18.364 16.9502L16.95 18.3642L12 13.4142L7.04999 18.3642L5.63599 16.9502L10.586 12.0002L5.63599 7.05023L7.04999 5.63623L12 10.5862Z" fill="white"></path>
+                  </svg>
+                </div>
+              </button>
+              <div style="background: rgb(232,232,232)" data-testid="qv-review-media" class="item-img">
+                ${r.image_url ? `<img src="${r.image_url}" alt="${r.reviewer_name} review" data-img-ratio="1.5" style="background:rgb(232,232,232);" onerror="this.parentElement.removeChild(this)" onload="this.classList.add('fadeIn'); this.loaded = true;" class="portrait fadeIn">` : ""}
+              </div>
+              <div class="main">
+                <div class="review-details">
+                  <div style="margin-bottom: 4px;" class="spread-container">
+                    <div data-testid="qv-review-title" class="normal-text title">${r.reviewer_name || "Anonymous"}</div>
+                    <div style="display:flex;align-items:center;">
+                      <div class="verified-purchase-container verified-i">
+                        <svg viewBox="0 0 24 24" aria-label="verified-icon" role="img" class="loox-icon verified-purchase-icon loox-verified-badge" style="width: 0.9em; height: 0.9em; vertical-align: middle; flex-shrink: 0;">
+                          <use href="#loox-ic-verified-icon"></use>
+                        </svg>
+                        <span class="small-text">Verified purchase</span>
+                      </div>
+                      <button id="i-icon" aria-label="More information" style="display:flex" data-testid="qv-review-show-more-button" class="button-reset">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M7.99992 14.6666C4.31792 14.6666 1.33325 11.682 1.33325 7.99998C1.33325 4.31798 4.31792 1.33331 7.99992 1.33331C11.6819 1.33331 14.6666 4.31798 14.6666 7.99998C14.6666 11.682 11.6819 14.6666 7.99992 14.6666ZM7.99992 13.3333C9.41441 13.3333 10.771 12.7714 11.7712 11.7712C12.7713 10.771 13.3333 9.41447 13.3333 7.99998C13.3333 6.58549 12.7713 5.22894 11.7712 4.22874C10.771 3.22855 9.41441 2.66665 7.99992 2.66665C6.58543 2.66665 5.22888 3.22855 4.22868 4.22874C3.22849 5.22894 2.66659 6.58549 2.66659 7.99998C2.66659 9.41447 3.22849 10.771 4.22868 11.7712C5.22888 12.7714 6.58543 13.3333 7.99992 13.3333ZM7.33325 4.66665H8.66659V5.99998H7.33325V4.66665ZM7.33325 7.33331H8.66659V11.3333H7.33325V7.33331Z" fill="black" fill-opacity="1"></path>
+                        </svg>
+                      </button>
+                      <div data-element="notification-text" data-testid="qv-review-verified-notification" class="i-verified-notification">
+                        <span data-element="notification-text">This review was marked as verified by the store owner.</span>
+                        <span data-element="notification-text">This review was imported from an external source.</span>
+                        <a href="" data-verify-reviews-popup="1" data-testid="qv-review-verified-notification-learn-more-button" class="verified-notification-learn-more-trigger">Learn more</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spread-container">
+                    <div data-testid="qv-review-stars" class="stars">
+                      ${renderStars(r.rating)}
+                    </div>
+                  </div>
+                </div>
+                <div class="review-content-wrapper">
+                  <div data-testid="qv-review-content" class="review-content">
+                    <div class="pre-wrap normal-text">${r.review_text}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Open the review popup by injecting the overlay into the DOM.
+    function openReviewPopup(review) {
+      const overlay = document.createElement("div");
+      overlay.className = "popup-overlay";
+      overlay.innerHTML = renderPopup(review);
+      document.body.appendChild(overlay);
+      document.body.classList.add("popup-open");
+    }
+    
+    // Close the popup and remove the overlay.
+    function closeReviewPopup() {
+      const popupOverlay = document.querySelector(".popup-overlay");
+      if (popupOverlay) {
+        popupOverlay.remove();
+      }
+      document.body.classList.remove("popup-open");
+    }
+  </script>
+</body>
+</html>
+
+
+<link href="{{ 'reviews-widget.css' | asset_url }}" rel="stylesheet">
+<script src="{{ 'reviews-widget.js' | asset_url }}" defer></script>
+<script src="{{ 'header-review.js' | asset_url }}" defer></script>
+
+
+{% schema %}
+{
+  "name": "Product Reviews",
+  "target": "section",
+  "settings": []
+}
+{% endschema %}

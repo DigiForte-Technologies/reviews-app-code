@@ -1,0 +1,361 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+
+
+/* ===== Review Header Bar ===== */
+.loox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.loox-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loox-header-left svg {
+  fill: #f5c518;
+  width: 20px;
+  height: 20px;
+}
+
+.loox-header-left .review-count {
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.loox-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.loox-header button {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.loox-header button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== Grid Layout ===== */
+.loox-reviews-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .loox-reviews-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+/* ===== Card Styling ===== */
+.grid-item-wrap {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 12px;
+  transition: box-shadow 0.25s ease;
+}
+
+.grid-item-wrap:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+}
+
+.item-img img {
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+  display: block;
+}
+
+
+.block.title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.verified-badge-and-text {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 400;
+  gap: 4px;
+  color: #000;
+}
+
+.verified-badge-and-text svg {
+  width: 14px;
+  height: 14px;
+  fill: #000;
+  flex-shrink: 0;
+}
+
+.block.stars {
+  margin-bottom: 6px;
+}
+
+.block.stars svg {
+  fill: #f5c518;
+  width: 18px;
+  height: 18px;
+}
+
+.main-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #333;
+}
+
+/***********************************************
+ * Popup overlay and content
+ ***********************************************/
+ .popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: #fff;
+  border-radius: 8px;
+  max-width: 900px;       /* Adjust as desired */
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Left side image container */
+.popup-img-wrapper {
+  width: 50%;            /* Half width for the image */
+  background: #eee;      /* fallback background if no image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.popup-img-wrapper img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Right side details */
+.popup-details {
+  width: 50%;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* ✅ This aligns content to the top */
+  overflow-y: auto;
+}
+
+/* Close button in top-right corner */
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  cursor: pointer;
+}
+
+.popup-reviewer-name {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+
+.popup-review-text {
+  margin: 12px 0 0 0;
+  line-height: 1.5;
+}
+
+/* remove outer padding from the whole card */
+.loox-reviews-list .grid-item-wrap {
+  padding: 0;
+}
+
+/* re‑add the same padding only around the text/content area */
+.loox-reviews-list .grid-item-wrap .main {
+  padding: 12px;
+}
+
+@media screen and (min-width: 990px) {
+  .title, .title-wrapper-with-link {
+      margin: 0 !important;
+  }
+}
+.title, .title-wrapper-with-link {
+  margin: 0 !important;
+}
+
+
+@media (max-width: 640px) {
+  .popup-overlay {
+    align-items: center;      /* center vertically */
+    justify-content: center;  /* center horizontally */
+    padding: 0;
+  }
+
+  .popup-content {
+    width: 80vw;              /* 80% of viewport width */
+    max-width: 360px;         /* cap at a sensible size */
+    max-height: 80vh;         /* 80% of viewport height */
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 8px;       /* subtle rounding now */
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  /* Image takes its natural height but no more than half the popup */
+  .popup-img-wrapper {
+    width: 100%;
+    height: auto;
+    max-height: 45%;          /* cap at 45% of popup height */
+    overflow: hidden;
+  }
+  .popup-img-wrapper img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* Close button in the corner of image area */
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+    z-index: 2;
+  }
+
+  /* Details scroll area */
+  .popup-details {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    width: 100% !important;
+    
+  }
+
+  .popup-reviewer-name {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .popup-stars svg {
+    width: 16px;
+    height: 16px;
+  }
+  .verified-badge-and-text {
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .popup-review-text {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #333;
+    margin: 0;
+  }
+}
+
+
+/* show more */
+
+/* reviews-widget.css (or in your <style>) */
+.show-more-btn {
+  padding: 10px 20px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+@media (min-width: 769px) {
+  /* hide on desktop */
+  .show-more-wrapper { display: none; }
+}
+
+/* Mobile: make review cards wider by reducing padding and gaps */
+@media (max-width: 640px) {
+  /* remove the container’s left/right padding */
+  #loox-clone-reviews {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  /* tighten up the grid gaps so cards span wider */
+  .loox-reviews-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px !important;
+  }
+
+  /* if you have an extra wrapper around individual cards, remove its padding */
+  .grid-item-wrap {
+    padding: 0 !important;
+  }
+  /* then re‑apply your desired padding inside the card */
+  .grid-item-wrap .main {
+    padding: 12px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* switch off grid → use CSS columns for masonry */
+  .loox-reviews-list {
+    display: block !important;
+    column-count: 2;
+    column-gap: 12px;       /* match your gutter */
+  }
+
+
+
+  /* each card becomes an inline‑block that flows into columns */
+  .loox-reviews-list .grid-item-wrap {
+    display: inline-block;
+    width: 100%;
+    /* margin-bottom: 5px;     vertical gutter */
+    break-inside: avoid;     /* avoid breaking cards across columns */
+  }
+}
